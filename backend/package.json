@@ -32,5 +32,8 @@
     "multer": "^2.0.2",
     "prisma": "^6.15.0",
     "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
   }
 }
