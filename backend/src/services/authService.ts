@@ -71,6 +71,56 @@ export class AuthService {
     return { user: userWithoutPassword, token };
   }
 
+  static async getUserProfile(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        phone: true,
+        createdAt: true,
+        apartments: {
+          select: {
+            id: true,
+            unitNumber: true,
+            floor: true,
+            building: {
+              select: { name: true }
+            }
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
+  }
+
+  static async updateProfile(userId: string, updates: {
+    fullName?: string;
+    phone?: string;
+  }) {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: updates,
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        phone: true,
+        updatedAt: true
+      }
+    });
+
+    return user;
+  }
+
   static generateToken(userId: string): string {
     return jwt.sign(
       { userId },
