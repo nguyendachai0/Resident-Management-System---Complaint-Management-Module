@@ -1,5 +1,5 @@
 import { prisma } from '../config/database';
-
+import { UserRole } from '@prisma/client';
 export class UserService {
   static async getUsers(filters: {
     page: number;
@@ -105,7 +105,7 @@ export class UserService {
   static async updateUser(id: string, updates: {
     fullName?: string;
     phone?: string;
-    role?: string;
+    role?: UserRole;
     isActive?: boolean;
   }) {
     const user = await prisma.user.update({

@@ -13,6 +13,13 @@ router.get('/',
   UserController.getUsers
 );
 
+// Get user statistics (admin/manager only)
+router.get('/stats/overview', 
+  requireRole(['SUPER_ADMIN', 'BUILDING_MANAGER']), 
+  UserController.getUserStats
+);
+
+
 // Get user by ID (admin/manager only)
 router.get('/:id', 
   requireRole(['SUPER_ADMIN', 'BUILDING_MANAGER']), 
@@ -31,10 +38,5 @@ router.delete('/:id',
   UserController.deleteUser
 );
 
-// Get user statistics (admin/manager only)
-router.get('/stats/overview', 
-  requireRole(['SUPER_ADMIN', 'BUILDING_MANAGER']), 
-  UserController.getUserStats
-);
 
 export default router;

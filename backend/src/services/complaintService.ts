@@ -1,20 +1,23 @@
 import { prisma } from '../config/database';
 import { ComplaintFilters } from '../types';
-import { ComplaintStatus, Priority } from '@prisma/client';
+import { ComplaintCategory, ComplaintStatus, Priority } from '@prisma/client';
+
+
 
 export class ComplaintService {
   static async createComplaint(data: {
     title: string;
     description: string;
-    category: string;
-    priority?: string;
+    category: ComplaintCategory;
+    priority?: Priority;
+    status?: ComplaintStatus;
     apartmentId: string;
     reporterId: string;
   }) {
     const complaint = await prisma.complaint.create({
       data: {
         ...data,
-        priority: data.priority as Priority || 'MEDIUM'
+        priority: data.priority ?? Priority.MEDIUM
       },
       include: {
         reporter: {
@@ -131,14 +134,14 @@ export class ComplaintService {
 
   static async updateComplaint(
     id: string,
-    updates: {
-      title?: string;
-      description?: string;
-      category?: string;
-      priority?: string;
-      status?: string;
-      assigneeId?: string;
-    },
+      updates: {
+    title?: string;
+    description?: string;
+    category?: ComplaintCategory;
+    priority?: Priority;
+    status?: ComplaintStatus;
+    assigneeId?: string;
+  },
     userId: string,
     userRole: string
   ) {

@@ -20,10 +20,11 @@ export class AuthService {
     }
 
     const passwordHash = await bcrypt.hash(userData.password, 12);
+    const { email, fullName, phone, role } = userData;
 
     const user = await prisma.user.create({
       data: {
-        ...userData,
+        email, fullName, phone,
         passwordHash,
         role: userData.role || 'RESIDENT'
       },
@@ -123,9 +124,11 @@ export class AuthService {
 
   static generateToken(userId: string): string {
     return jwt.sign(
-      { userId },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-    );
+    { userId },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+    } as jwt.SignOptions
+  );
   }
 }

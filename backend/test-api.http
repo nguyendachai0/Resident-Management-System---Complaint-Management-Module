@@ -1,0 +1,56 @@
+### Health Check
+GET http://localhost:5000/api/health
+
+### Register new user
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "test123",
+  "fullName": "Test User",
+  "phone": "+84912345678"
+}
+
+### Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "resident1@gmail.com",
+  "password": "resident123"
+}
+
+### Get Profile (Replace TOKEN with actual token from login)
+GET http://localhost:5000/api/auth/profile
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Get Complaints (Replace TOKEN with actual token)
+GET http://localhost:5000/api/complaints?page=1&limit=10
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Create Complaint (Replace TOKEN with actual token)
+POST http://localhost:5000/api/complaints
+Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
+
+{
+  "title": "Test complaint from API",
+  "description": "This is a test complaint created via API",
+  "category": "OTHER",
+  "priority": "MEDIUM",
+  "apartmentId": "APARTMENT_ID_FROM_DATABASE"
+}
+
+### Admin Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@abc-apartment.com",
+  "password": "admin123"
+}
+
+### Get All Users (Admin only - Replace TOKEN with admin token)
+GET http://localhost:5000/api/users
+Authorization: Bearer ADMIN_TOKEN_HERE
