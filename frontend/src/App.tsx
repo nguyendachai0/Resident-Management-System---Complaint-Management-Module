@@ -1,60 +1,80 @@
-import { useState } from 'react'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'sonner';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import Layout from './components/common/Layout';
+import LoginForm from './components/auth/LoginForm';
+import Dashboard from './pages/Dashboard';
+import Complaints from './pages/Complaints';
+import ComplaintForm from './components/complaints/ComplaintForm';
+import Profile from './pages/Profile';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="card max-w-md mx-auto">
-          <div className="card-header">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Resident Management System
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Vite + React + TypeScript + Tailwind v4
-            </p>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router>
+          <div className="App">
+            <Toaster position="top-right" richColors />
+            <Routes>
+              <Route path="/login" element={<LoginForm />} />
+              
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Navigate to="/dashboard" replace />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/complaints" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Complaints />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/complaints/new" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ComplaintForm />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Profile />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+            </Routes>
           </div>
-          <div className="card-body space-y-4">
-            <div className="text-center">
-              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                ✅ Modern Setup Working!
-              </div>
-            </div>
-            
-            <div className="space-y-3">
-              <button
-                className="btn btn-primary w-full"
-                onClick={() => setCount((count) => count + 1)}
-              >
-                Count is {count}
-              </button>
-              
-              <button className="btn btn-secondary w-full">
-                Secondary Button
-              </button>
-              
-              <button className="btn btn-danger w-full">
-                Danger Button
-              </button>
-              
-              <input 
-                className="input-field" 
-                placeholder="Test input field"
-              />
-              
-              <div className="grid grid-cols-3 gap-2">
-                <div className="h-8 bg-blue-500 rounded"></div>
-                <div className="h-8 bg-green-500 rounded"></div>
-                <div className="h-8 bg-purple-500 rounded"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+        </Router>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
